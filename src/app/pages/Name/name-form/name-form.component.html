@@ -1,0 +1,7 @@
+<form (submit)="onSubmit($event)">
+  <div class="form-control">
+    <label for="name">Your Name: </label>
+    <input type="text" [(ngModel)]="name" name="name" id="name" />
+  </div>
+  <button>Submit</button>
+</form>
