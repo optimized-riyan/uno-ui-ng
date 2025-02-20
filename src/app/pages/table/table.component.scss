@@ -1,0 +1,17 @@
+.lobby-info {
+  display: flex;
+  margin: auto;
+
+  p {
+    font-size: small;
+    font-weight: bold;
+
+    &:first-child {
+      margin-right: 0.5rem;
+    }
+
+    &:last-child {
+      margin-left: 0.5rem;
+    }
+  }
+}
