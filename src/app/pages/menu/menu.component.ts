@@ -12,7 +12,7 @@ import env from 'app/env/env';
 })
 export class MenuComponent {
   lobbyId: string = '';
-  lobbySize: number = 0;
+  lobbyCapacity: number = 0;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -45,9 +45,27 @@ export class MenuComponent {
 
   onHostSubmit(event: SubmitEvent): void {
     event.preventDefault();
+    this.http
+      .post<{
+        lobbyId: string;
+      }>(
+        `${env.unoUrl}/api/host`,
+        {
+          hostname: localStorage.getItem('name'),
+          playerCount: this.lobbyCapacity,
+        },
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: response => {
+          this.router.navigate(['/table'], {
+            state: {
+              lobbyId: response.lobbyId,
+              lobbyCapacity: this.lobbyCapacity,
+            },
+          });
+        },
+        error: err => console.log(err),
+      });
   }
-}
-
-interface HostResponse {
-  lobbyId: string;
 }
