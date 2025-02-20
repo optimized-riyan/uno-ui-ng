@@ -1,0 +1,28 @@
+<form (submit)="onJoinSubmit($event)">
+  <div class="form-control">
+    <label for="join">Join Lobby:</label>
+    <input
+      type="text"
+      name="join"
+      id="join"
+      required
+      autocomplete="off"
+      [(ngModel)]="lobbyId"
+    />
+  </div>
+  <button>Join</button>
+</form>
+<form (submit)="onHostSubmit($event)">
+  <div class="form-control">
+    <label for="host">Host Lobby:</label>
+    <input
+      type="number"
+      name="host"
+      id="host"
+      required
+      autocomplete="off"
+      [(ngModel)]="lobbySize"
+    />
+  </div>
+  <button>Host</button>
+</form>
