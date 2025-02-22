@@ -22,7 +22,7 @@ import {
   StackTopUpdate,
 } from 'app/shared/types';
 import { filter, map } from 'rxjs';
-import { webSocket } from 'rxjs/webSocket';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 @Component({
   selector: 'table',
@@ -41,9 +41,11 @@ export class TableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const ws = webSocket(`${env.unoWssOrigin}`).pipe(
-      map(message => message as ServerEvent)
-    );
+    const ws = webSocket<ServerEvent>(`${env.unoWssOrigin}`);
+    this.subsBeforeCSPlayerSync(ws);
+  }
+
+  private subsBeforeCSPlayerSync(ws: WebSocketSubject<ServerEvent>): void {
     ws.pipe(
       filter(message => message.type === ServerEventType.InvalidAction),
       map(message => message.data as InvalidAction)
@@ -52,39 +54,57 @@ export class TableComponent implements OnInit {
       filter(message => message.type === ServerEventType.PlayerIndexSync),
       map(message => message.data as PlayerIndexSync)
     ).subscribe(this.onPlayerIndexSync);
+    ws.pipe(
+      filter(message => message.type === ServerEventType.GameStarted),
+      map(message => message.data as GameStarted)
+    ).subscribe(this.onGameStarted);
+    ws.pipe(
+      filter(message => message.type === ServerEventType.StackTopUpdate),
+      map(message => message.data as StackTopUpdate)
+    ).subscribe(this.onStackTopUpdate);
+    ws.pipe(
+      filter(message => message.type === ServerEventType.PlayerTurnUpdate),
+      map(message => message.data as PlayerTurnUpdate)
+    ).subscribe(this.onPlayerTurnUpdate);
+    ws.pipe(
+      filter(message => message.type === ServerEventType.CSPlayersSync),
+      map(message => message.data as CSPlayersSync)
+    ).subscribe(this.onCSPlayersSync);
   }
 
-  onInvalidAction(data: InvalidAction): void {
+  private subsAfterCSPlayersSync(ws: WebSocketSubject<ServerEvent>): void {}
+
+  private onInvalidAction(data: InvalidAction): void {
     console.log(data);
   }
 
-  onPlayerIndexSync(data: PlayerIndexSync): void {}
+  private onPlayerIndexSync(data: PlayerIndexSync): void {}
 
-  onCSPlayersSync(data: CSPlayersSync): void {}
+  private onCSPlayersSync(data: CSPlayersSync): void {}
 
-  onCardsUpdate(data: CardsUpdate): void {}
+  private onCardsUpdate(data: CardsUpdate): void {}
 
-  onStackTopUpdate(data: StackTopUpdate): void {}
+  private onStackTopUpdate(data: StackTopUpdate): void {}
 
-  onCardCountUpdate(data: CardCountUpdate): void {}
+  private onCardCountUpdate(data: CardCountUpdate): void {}
 
-  onDirectionUpdate(data: DirectionUpdate): void {}
+  private onDirectionUpdate(data: DirectionUpdate): void {}
 
-  onPlayerTurnUpdate(data: PlayerTurnUpdate): void {}
+  private onPlayerTurnUpdate(data: PlayerTurnUpdate): void {}
 
-  onStackColorUpdate(data: StackColorUpdate): void {}
+  private onStackColorUpdate(data: StackColorUpdate): void {}
 
-  onCardValidity(data: CardValidity): void {}
+  private onCardValidity(data: CardValidity): void {}
 
-  onPlayerOut(data: PlayerOut): void {}
+  private onPlayerOut(data: PlayerOut): void {}
 
-  onPlayerSkipped(data: PlayerSkipped): void {}
+  private onPlayerSkipped(data: PlayerSkipped): void {}
 
-  onGameStarted(data: GameStarted): void {}
+  private onGameStarted(data: GameStarted): void {}
 
-  onGameEnded(data: GameEnded): void {}
+  private onGameEnded(data: GameEnded): void {}
 
-  onCardSubmissionRequired(data: CardSubmissionRequired): void {}
+  private onCardSubmissionRequired(data: CardSubmissionRequired): void {}
 
-  onColorChoiceRequired(data: ColorChoiceRequired): void {}
+  private onColorChoiceRequired(data: ColorChoiceRequired): void {}
 }
