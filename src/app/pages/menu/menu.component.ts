@@ -23,7 +23,7 @@ export class MenuComponent {
         lobbyId: string;
         lobbyCapacity: number;
       }>(
-        `${env.unoUrl}/api/join`,
+        `${env.unoOrigin}/api/join`,
         {
           lobbyId: this.lobbyId,
           name: localStorage.getItem('name'),
@@ -49,7 +49,7 @@ export class MenuComponent {
       .post<{
         lobbyId: string;
       }>(
-        `${env.unoUrl}/api/host`,
+        `${env.unoOrigin}/api/host`,
         {
           hostname: localStorage.getItem('name'),
           playerCount: this.lobbyCapacity,

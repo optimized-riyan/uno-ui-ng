@@ -96,7 +96,7 @@ export type InfoEvent = CardValidity | PlayerOut | PlayerSkipped;
 
 export type InputRequiredEvent = CardSubmissionRequired;
 
-export type InvalidAction = string;
+export type InvalidAction = string | undefined;
 
 export interface ClientSidePlayer {
   name: string;
@@ -149,6 +149,11 @@ export interface PlayerSkipped {
   playerIndex: number;
 }
 
+export type GameStarted = undefined;
+export type GameEnded = undefined;
+
 export interface CardSubmissionRequired {
   deckPenalty: number;
 }
+
+export type ColorChoiceRequired = undefined;
