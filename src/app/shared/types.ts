@@ -157,3 +157,13 @@ export interface CardSubmissionRequired {
 }
 
 export type ColorChoiceRequired = undefined;
+
+export interface TableState {
+  playerIndex: number;
+  players: ClientSidePlayer[];
+  cards: Card[];
+  stackTop: Card;
+  direction: boolean;
+  playerTurn: number;
+  stackColor: CardColor;
+}
