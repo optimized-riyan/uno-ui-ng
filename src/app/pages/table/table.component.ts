@@ -42,37 +42,62 @@ export class TableComponent implements OnInit {
 
   ngOnInit(): void {
     const ws = webSocket<ServerEvent>(`${env.unoWssOrigin}`);
-    this.subsBeforeCSPlayerSync(ws);
+    ws.subscribe(message => {
+      const data = message.data;
+      switch (message.type) {
+        case ServerEventType.InvalidAction:
+          this.onInvalidAction(data as InvalidAction);
+          break;
+        case ServerEventType.PlayerIndexSync:
+          this.onPlayerIndexSync(data as PlayerIndexSync);
+          break;
+        case ServerEventType.CSPlayersSync:
+          this.onCSPlayersSync(data as CSPlayersSync);
+          break;
+        case ServerEventType.CardsUpdate:
+          this.onCardsUpdate(data as CardsUpdate);
+          break;
+        case ServerEventType.StackTopUpdate:
+          this.onStackTopUpdate(data as StackTopUpdate);
+          break;
+        case ServerEventType.StackColorUpdate:
+          this.onStackColorUpdate(data as StackColorUpdate);
+          break;
+        case ServerEventType.CardCountUpdate:
+          this.onCardCountUpdate(data as CardCountUpdate);
+          break;
+        case ServerEventType.DirectionUpdate:
+          this.onDirectionUpdate(data as DirectionUpdate);
+          break;
+        case ServerEventType.PlayerTurnUpdate:
+          this.onPlayerTurnUpdate(data as PlayerTurnUpdate);
+          break;
+        case ServerEventType.CardValidity:
+          this.onCardValidity(data as CardValidity);
+          break;
+        case ServerEventType.GameStarted:
+          this.onGameStarted(data as GameStarted);
+          break;
+        case ServerEventType.GameEnded:
+          this.onGameEnded(data as GameEnded);
+          break;
+        case ServerEventType.PlayerSkipped:
+          this.onPlayerSkipped(data as PlayerSkipped);
+          break;
+        case ServerEventType.PlayerOut:
+          this.onPlayerOut(data as PlayerOut);
+          break;
+        case ServerEventType.CardSubmissionRequired:
+          this.onCardSubmissionRequired(data as CardSubmissionRequired);
+          break;
+        case ServerEventType.ColorChoiceRequired:
+          this.onColorChoiceRequired(data as ColorChoiceRequired);
+          break;
+        default:
+          console.error('uncaught server event: ', message);
+      }
+    });
   }
-
-  private subsBeforeCSPlayerSync(ws: WebSocketSubject<ServerEvent>): void {
-    ws.pipe(
-      filter(message => message.type === ServerEventType.InvalidAction),
-      map(message => message.data as InvalidAction)
-    ).subscribe(this.onInvalidAction);
-    ws.pipe(
-      filter(message => message.type === ServerEventType.PlayerIndexSync),
-      map(message => message.data as PlayerIndexSync)
-    ).subscribe(this.onPlayerIndexSync);
-    ws.pipe(
-      filter(message => message.type === ServerEventType.GameStarted),
-      map(message => message.data as GameStarted)
-    ).subscribe(this.onGameStarted);
-    ws.pipe(
-      filter(message => message.type === ServerEventType.StackTopUpdate),
-      map(message => message.data as StackTopUpdate)
-    ).subscribe(this.onStackTopUpdate);
-    ws.pipe(
-      filter(message => message.type === ServerEventType.PlayerTurnUpdate),
-      map(message => message.data as PlayerTurnUpdate)
-    ).subscribe(this.onPlayerTurnUpdate);
-    ws.pipe(
-      filter(message => message.type === ServerEventType.CSPlayersSync),
-      map(message => message.data as CSPlayersSync)
-    ).subscribe(this.onCSPlayersSync);
-  }
-
-  private subsAfterCSPlayersSync(ws: WebSocketSubject<ServerEvent>): void {}
 
   private onInvalidAction(data: InvalidAction): void {
     console.log(data);
