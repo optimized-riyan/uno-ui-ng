@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import env from 'app/env/env';
 import {
   CardCountUpdate,
@@ -21,8 +22,14 @@ import {
   StackColorUpdate,
   StackTopUpdate,
 } from 'app/shared/types';
-import { filter, map } from 'rxjs';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import {
+  playerIndexSync,
+  playersSync,
+  updateCardCount,
+  updateCards,
+  updateStackTop,
+} from 'app/state/table/table.actions';
+import { webSocket } from 'rxjs/webSocket';
 
 @Component({
   selector: 'table',
@@ -34,7 +41,7 @@ export class TableComponent implements OnInit {
   lobbyId: string;
   lobbyCapacity: number;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private store: Store) {
     const state = router.getCurrentNavigation()!.extras.state as any;
     this.lobbyId = state.lobbyId;
     this.lobbyCapacity = state.lobbyCapacity;
@@ -103,15 +110,25 @@ export class TableComponent implements OnInit {
     console.log(data);
   }
 
-  private onPlayerIndexSync(data: PlayerIndexSync): void {}
+  private onPlayerIndexSync(data: PlayerIndexSync): void {
+    this.store.dispatch(playerIndexSync(data));
+  }
 
-  private onCSPlayersSync(data: CSPlayersSync): void {}
+  private onCSPlayersSync(data: CSPlayersSync): void {
+    this.store.dispatch(playersSync(data));
+  }
 
-  private onCardsUpdate(data: CardsUpdate): void {}
+  private onCardsUpdate(data: CardsUpdate): void {
+    this.store.dispatch(updateCards(data));
+  }
 
-  private onStackTopUpdate(data: StackTopUpdate): void {}
+  private onStackTopUpdate(data: StackTopUpdate): void {
+    this.store.dispatch(updateStackTop(data));
+  }
 
-  private onCardCountUpdate(data: CardCountUpdate): void {}
+  private onCardCountUpdate(data: CardCountUpdate): void {
+    this.store.dispatch(updateCardCount(data));
+  }
 
   private onDirectionUpdate(data: DirectionUpdate): void {}
 

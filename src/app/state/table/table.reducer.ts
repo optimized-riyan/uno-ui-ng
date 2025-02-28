@@ -3,6 +3,7 @@ import { TableState } from 'app/shared/types';
 import {
   playerIndexSync,
   playersSync,
+  updateCardCount,
   updateCards,
   updateDirection,
   updatePlayerTurn,
@@ -24,6 +25,12 @@ export const tableReducer = createReducer(
     ...state,
     cards,
   })),
+  on(updateCardCount, (state, { count, playerIndex }) => ({
+    ...state,
+    players: state.players.map(player =>
+      player.index === playerIndex ? { ...player, cardCount: count } : player
+    ),
+  })),
   on(updateStackTop, (state, { card }) => ({
     ...state,
     stackTop: card,
@@ -32,12 +39,12 @@ export const tableReducer = createReducer(
     ...state,
     stackColor: color,
   })),
-  on(updateDirection, (state, { direction }) => ({
+  on(updateDirection, (state, { isReversed }) => ({
     ...state,
-    direction,
+    direction: isReversed,
   })),
-  on(updatePlayerTurn, (state, { index }) => ({
+  on(updatePlayerTurn, (state, { currentPlayerIndex }) => ({
     ...state,
-    playerTurn: index,
+    playerTurn: currentPlayerIndex,
   }))
 );
