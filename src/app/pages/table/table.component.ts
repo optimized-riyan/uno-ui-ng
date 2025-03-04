@@ -27,6 +27,9 @@ import {
   playersSync,
   updateCardCount,
   updateCards,
+  updateDirection,
+  updatePlayerTurn,
+  updateStackColor,
   updateStackTop,
 } from 'app/state/table/table.actions';
 import { webSocket } from 'rxjs/webSocket';
@@ -130,11 +133,17 @@ export class TableComponent implements OnInit {
     this.store.dispatch(updateCardCount(data));
   }
 
-  private onDirectionUpdate(data: DirectionUpdate): void {}
+  private onDirectionUpdate(data: DirectionUpdate): void {
+    this.store.dispatch(updateDirection(data));
+  }
 
-  private onPlayerTurnUpdate(data: PlayerTurnUpdate): void {}
+  private onPlayerTurnUpdate(data: PlayerTurnUpdate): void {
+    this.store.dispatch(updatePlayerTurn(data));
+  }
 
-  private onStackColorUpdate(data: StackColorUpdate): void {}
+  private onStackColorUpdate(data: StackColorUpdate): void {
+    this.store.dispatch(updateStackColor(data));
+  }
 
   private onCardValidity(data: CardValidity): void {}
 
