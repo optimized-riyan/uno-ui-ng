@@ -1,5 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
-import { TableState } from 'app/shared/types';
+import {
+  Card,
+  CardColor,
+  CardValue,
+  ClientSidePlayer,
+  TableState,
+} from 'app/shared/types';
 import {
   playerIndexSync,
   playersSync,
@@ -11,8 +17,18 @@ import {
   updateStackTop,
 } from './table.actions';
 
+const initialTableState: TableState = {
+  cards: [] as Card[],
+  direction: true,
+  playerIndex: 0,
+  players: [] as ClientSidePlayer[],
+  playerTurn: 0,
+  stackColor: CardColor.Blue,
+  stackTop: { color: CardColor.Blue, value: CardValue.Zero } as Card,
+};
+
 export const tableReducer = createReducer(
-  {} as TableState,
+  initialTableState,
   on(playerIndexSync, (state, { playerIndex }) => ({
     ...state,
     playerIndex,

@@ -3,3 +3,6 @@
   <p>|</p>
   <p>Capacity: {{ lobbyCapacity }}</p>
 </div>
+<div class="cards">
+  <card *ngFor="let card of cards$ | async" [card]="card" />
+</div>

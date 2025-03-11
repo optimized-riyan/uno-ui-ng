@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 
-export const selectTable = (state: AppState) => state.tableState;
+export const selectTable = (state: AppState) => state.table;
 
 export const selectPlayerIndex = createSelector(
   selectTable,

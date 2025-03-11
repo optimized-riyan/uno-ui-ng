@@ -1,8 +1,10 @@
+import { AsyncPipe, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import env from 'app/env/env';
 import {
+  Card,
   CardCountUpdate,
   CardSubmissionRequired,
   CardsUpdate,
@@ -22,6 +24,7 @@ import {
   StackColorUpdate,
   StackTopUpdate,
 } from 'app/shared/types';
+import { AppState } from 'app/state/app.state';
 import {
   playerIndexSync,
   playersSync,
@@ -32,22 +35,27 @@ import {
   updateStackColor,
   updateStackTop,
 } from 'app/state/table/table.actions';
+import { selectCards } from 'app/state/table/table.selectors';
+import { Observable } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
+import { CardComponent } from '../../shared/components/card/card.component';
 
 @Component({
   selector: 'table',
-  imports: [],
+  imports: [NgFor, CardComponent, AsyncPipe],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
 export class TableComponent implements OnInit {
   lobbyId: string;
   lobbyCapacity: number;
+  cards$: Observable<Card[]>;
 
-  constructor(private router: Router, private store: Store) {
+  constructor(private router: Router, private store: Store<AppState>) {
     const state = router.getCurrentNavigation()!.extras.state as any;
     this.lobbyId = state.lobbyId;
     this.lobbyCapacity = state.lobbyCapacity;
+    this.cards$ = store.select(selectCards);
   }
 
   ngOnInit(): void {
