@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Card } from 'app/shared/types';
 import cardUrl from 'app/shared/utils/cardUrl.util';
 
@@ -8,11 +8,11 @@ import cardUrl from 'app/shared/utils/cardUrl.util';
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
 })
-export class CardComponent {
+export class CardComponent implements OnInit {
   @Input({ required: true }) card!: Card;
-  src: string;
+  src!: string;
 
-  constructor() {
+  ngOnInit(): void {
     this.src = cardUrl(this.card);
   }
 }
